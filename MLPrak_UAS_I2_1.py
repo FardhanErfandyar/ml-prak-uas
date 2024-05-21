@@ -108,76 +108,31 @@ print("Data setelah menangani outlier".center(75, "="))
 print(df.head())
 print("=" * 75)
 
-
-# INI BELUM
-
 # amati bentuk visual masing-masing fitur
 plt.style.use("fivethirtyeight")
-plt.figure(figsize=(10, 6))
+plt.figure(1, figsize=(15, 6))
 n = 0
-for x in [
-    "Flight Distance",
-    "Seat comfort",
-    "Departure/Arrival time convenient",
-    "Food and drink",
-    "Gate location",
-    "Inflight wifi service",
-    "Inflight entertainment",
-    "Online support",
-    "Ease of Online booking",
-    "On-board service",
-    "Leg room service",
-    "Baggage handling",
-    "Checkin service",
-    "Cleanliness",
-    "Online boarding",
-    "Departure Delay in Minutes",
-    "Arrival Delay in Minutes",
-]:
+for x in ["Age", "Departure Delay in Minutes", "Arrival Delay in Minutes"]:
     n += 1
-    plt.subplot(4, 5, n)
+    plt.subplot(1, 3, n)
     plt.subplots_adjust(hspace=0.5, wspace=0.5)
     sns.histplot(df[x], kde=True, stat="density", kde_kws=dict(cut=3), bins=20)
+    plt.title("Distplot of {}".format(x))
 
 plt.show()
 
-# Ploting untuk mencari relasi antara Size dan Sweetness terhadap Quality
+# Ploting untuk mencari relasi antara Age , Annual Income and Spending Score
 plt.figure(1, figsize=(15, 20))
-numeric_cols = [
-    "Flight Distance",
-    "Seat comfort",
-    "Departure/Arrival time convenient",
-    "Food and drink",
-    "Gate location",
-    "Inflight wifi service",
-    "Inflight entertainment",
-    "Online support",
-    "Ease of Online booking",
-    "On-board service",
-    "Leg room service",
-    "Baggage handling",
-    "Checkin service",
-    "Cleanliness",
-    "Online boarding",
-    "Departure Delay in Minutes",
-    "Arrival Delay in Minutes",
-]
 n = 0
-for x in numeric_cols:
-    for y in numeric_cols:
+for x in ["Age", "Departure Delay in Minutes", "Arrival Delay in Minutes"]:
+    for y in ["Age", "Departure Delay in Minutes", "Arrival Delay in Minutes"]:
         n += 1
-        plt.subplot(16, 16, n)
+        plt.subplot(3, 3, n)
         plt.subplots_adjust(hspace=0.5, wspace=0.5)
-
-        # Convert x and y to numeric if they are not already
-        x_data = pd.to_numeric(df[x], errors="coerce")
-        y_data = pd.to_numeric(df[y], errors="coerce")
-
-        sns.regplot(x=x_data, y=y_data, data=df)
-        plt.ylabel(y)
+        sns.regplot(x=x, y=y, data=df)
+        plt.ylabel(y.split()[0] + " " + y.split()[1] if len(y.split()) > 1 else y)
 
 plt.show()
-
 
 # Melihat sebaran Food and drink dan Arrival Delay in Minutes terhadap Customer type
 plt.figure(1, figsize=(15, 8))
@@ -194,6 +149,7 @@ for CustomerType in ["Loyal Customer", "disloyal Customer"]:
     plt.title("Departure Delay in Minutes vs Arrival Delay in Minutes")
     plt.legend()
 plt.show()
+
 
 # Merancang K-Means untuk Food and drink dan Food and drink
 # Menentukan nilai k yang sesuai dengan Elbow-Method
@@ -212,8 +168,6 @@ plt.plot(range(1, 9), inertia, "o")
 plt.plot(range(1, 9), inertia, "-", alpha=0.5)
 plt.xlabel("Number of Clusters"), plt.ylabel("Inertia")
 plt.show()
-
-# INI BELUM
 
 # Membangun K-Means
 algorithm = KMeans(
@@ -236,11 +190,9 @@ step = 0.02
 x_min, x_max = X1[:, 0].min() - 1, X1[:, 0].max() + 1
 y_min, y_max = X1[:, 1].min() - 1, X1[:, 1].max() + 1
 xx, yy = np.meshgrid(np.arange(x_min, x_max, step), np.arange(y_min, y_max, step))
-Z1 = algorithm.predict(np.c_[xx.ravel(), yy.ravel()])  # array diratakan 1D
-
+Z1 = algorithm.predict(np.c_[xx.ravel(), yy.ravel()])
 
 # Melihat bentuk visual cluster
-
 plt.figure(1, figsize=(15, 7))
 plt.clf()
 Z1 = Z1.reshape(xx.shape)
@@ -252,13 +204,18 @@ plt.imshow(
     aspect="auto",
     origin="lower",
 )
-plt.scatter(x="Size", y="Sweetness", data=df, c=labels2, s=200)
+plt.scatter(
+    x="Departure Delay in Minutes",
+    y="Arrival Delay in Minutes",
+    data=df,
+    c=labels2,
+    s=200,
+)
 plt.scatter(x=centroids2[:, 0], y=centroids2[:, 1], s=300, c="red", alpha=0.5)
-plt.ylabel("Size"), plt.xlabel("Sweetness")
+plt.ylabel("Departure Delay in Minutes"), plt.xlabel("Arrival Delay in Minutes)")
 plt.show()
 
 
 # Melihat nilai Silhouette Score
-print("Silhouetter Score".center(75, "="))
 score2 = silhouette_score(X1, labels2)
 print("Silhouette Score: ", score2)
