@@ -1,4 +1,3 @@
-# import tools
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,18 +6,16 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
 # import data
-print("Data apple quality".center(75, "="))
+
+
 df = pd.read_csv("Airline_customer_satisfaction.csv")
 df.head()
-print(df.head())
 
 # amati bentuk data
-print("Bentuk Data".center(75, "="))
 df.shape
 print(df.shape)
 
 # Melihat ringkasan statistik deskriptif dari DataFrame
-print("Statistika deskriptif dari dataframe".center(75, "="))
 df.describe()
 print(df.describe())
 
@@ -27,7 +24,6 @@ print(df.describe())
 print("Pengecekan missing value".center(75, "="))
 print(df.isnull().sum())
 print("=" * 75)
-
 # Penanganan Missing value (Menghapus baris yang mengandung nilai null)
 df.dropna(inplace=True)
 
@@ -37,22 +33,31 @@ print("Data setelah menghapus missing value".center(75, "="))
 print(df.isnull().sum())
 print("=" * 75)
 
-# cek outlier
-plt.figure(figsize=(10, 6))
-sns.boxplot(
-    data=df[
-        [
-            "epalLengthCm",
-            "Weight",
-            "Sweetness",
-            "Crunchiness",
-            "Juiciness",
-            "Ripeness",
-            "Acidity",
-        ]
-    ]
-)
-plt.title("Boxplot")
+# Assuming 'df' is your DataFrame
+plt.figure(figsize=(14, 8))  # Adjusting the figure size for better visibility
+columns = [
+    "Age",
+    "Flight Distance",
+    "Seat comfort",
+    "Departure/Arrival time convenient",
+    "Food and drink",
+    "Gate location",
+    "Inflight wifi service",
+    "Inflight entertainment",
+    "Online support",
+    "Ease of Online booking",
+    "On-board service",
+    "Leg room service",
+    "Baggage handling",
+    "Checkin service",
+    "Cleanliness",
+    "Online boarding",
+    "Departure Delay in Minutes",
+    "Arrival Delay in Minutes",
+]
+sns.boxplot(data=df[columns])
+plt.title("Boxplot of Selected Features")
+plt.xticks(rotation=90)  # Rotate x-axis labels for better readability
 plt.show()
 
 
@@ -70,22 +75,31 @@ for column in df._get_numeric_data().columns:
         lower_bound,
         np.where(df[column] > upper_bound, upper_bound, df[column]),
     )
-# cek outlier
-plt.figure(figsize=(10, 6))
-sns.boxplot(
-    data=df[
-        [
-            "Size",
-            "Weight",
-            "Sweetness",
-            "Crunchiness",
-            "Juiciness",
-            "Ripeness",
-            "Acidity",
-        ]
-    ]
-)
-plt.title("Boxplot")
+# Assuming 'df' is your DataFrame
+plt.figure(figsize=(14, 8))  # Adjusting the figure size for better visibility
+columns = [
+    "Age",
+    "Flight Distance",
+    "Seat comfort",
+    "Departure/Arrival time convenient",
+    "Food and drink",
+    "Gate location",
+    "Inflight wifi service",
+    "Inflight entertainment",
+    "Online support",
+    "Ease of Online booking",
+    "On-board service",
+    "Leg room service",
+    "Baggage handling",
+    "Checkin service",
+    "Cleanliness",
+    "Online boarding",
+    "Departure Delay in Minutes",
+    "Arrival Delay in Minutes",
+]
+sns.boxplot(data=df[columns])
+plt.title("Boxplot of Selected Features")
+plt.xticks(rotation=90)  # Rotate x-axis labels for better readability
 plt.show()
 
 
@@ -95,21 +109,33 @@ print(df.head())
 print("=" * 75)
 
 
+# INI BELUM
+
 # amati bentuk visual masing-masing fitur
 plt.style.use("fivethirtyeight")
 plt.figure(figsize=(10, 6))
 n = 0
 for x in [
-    "Size",
-    "Weight",
-    "Sweetness",
-    "Crunchiness",
-    "Juiciness",
-    "Ripeness",
-    "Acidity",
+    "Flight Distance",
+    "Seat comfort",
+    "Departure/Arrival time convenient",
+    "Food and drink",
+    "Gate location",
+    "Inflight wifi service",
+    "Inflight entertainment",
+    "Online support",
+    "Ease of Online booking",
+    "On-board service",
+    "Leg room service",
+    "Baggage handling",
+    "Checkin service",
+    "Cleanliness",
+    "Online boarding",
+    "Departure Delay in Minutes",
+    "Arrival Delay in Minutes",
 ]:
     n += 1
-    plt.subplot(1, 7, n)
+    plt.subplot(4, 5, n)
     plt.subplots_adjust(hspace=0.5, wspace=0.5)
     sns.histplot(df[x], kde=True, stat="density", kde_kws=dict(cut=3), bins=20)
 
@@ -118,19 +144,29 @@ plt.show()
 # Ploting untuk mencari relasi antara Size dan Sweetness terhadap Quality
 plt.figure(1, figsize=(15, 20))
 numeric_cols = [
-    "Size",
-    "Weight",
-    "Sweetness",
-    "Crunchiness",
-    "Juiciness",
-    "Ripeness",
-    "Acidity",
+    "Flight Distance",
+    "Seat comfort",
+    "Departure/Arrival time convenient",
+    "Food and drink",
+    "Gate location",
+    "Inflight wifi service",
+    "Inflight entertainment",
+    "Online support",
+    "Ease of Online booking",
+    "On-board service",
+    "Leg room service",
+    "Baggage handling",
+    "Checkin service",
+    "Cleanliness",
+    "Online boarding",
+    "Departure Delay in Minutes",
+    "Arrival Delay in Minutes",
 ]
 n = 0
 for x in numeric_cols:
     for y in numeric_cols:
         n += 1
-        plt.subplot(7, 7, n)
+        plt.subplot(16, 16, n)
         plt.subplots_adjust(hspace=0.5, wspace=0.5)
 
         # Convert x and y to numeric if they are not already
@@ -143,26 +179,25 @@ for x in numeric_cols:
 plt.show()
 
 
-# Melihat sebaran Size dan Sweetness terhadap Quality
+# Melihat sebaran Food and drink dan Arrival Delay in Minutes terhadap Customer type
 plt.figure(1, figsize=(15, 8))
-for Quality in ["good", "bad"]:
+for CustomerType in ["Loyal Customer", "disloyal Customer"]:
     plt.scatter(
-        x="Size",
-        y="Sweetness",
-        data=df[df["Quality"] == Quality],
+        x="Departure Delay in Minutes",
+        y="Arrival Delay in Minutes",
+        data=df[df["Customer Type"] == CustomerType],
         s=200,
         alpha=0.5,
-        label=Quality,
+        label=CustomerType,
     )
-    plt.xlabel("Size"), plt.ylabel("Sweetness")
-    plt.title("Size vs Sweetness")
+    plt.xlabel("Departure Delay in Minutes"), plt.ylabel("Arrival Delay in Minutes")
+    plt.title("Departure Delay in Minutes vs Arrival Delay in Minutes")
     plt.legend()
 plt.show()
 
-
-# Merancang K-Means untuk Size dan Sweetness
+# Merancang K-Means untuk Food and drink dan Food and drink
 # Menentukan nilai k yang sesuai dengan Elbow-Method
-X1 = df[["Size", "Sweetness"]].iloc[:, :].values
+X1 = df[["Departure Delay in Minutes", "Arrival Delay in Minutes"]].iloc[:, :].values
 inertia = []
 for n in range(1, 9):
     algorithm = KMeans(
@@ -177,6 +212,8 @@ plt.plot(range(1, 9), inertia, "o")
 plt.plot(range(1, 9), inertia, "-", alpha=0.5)
 plt.xlabel("Number of Clusters"), plt.ylabel("Inertia")
 plt.show()
+
+# INI BELUM
 
 # Membangun K-Means
 algorithm = KMeans(
